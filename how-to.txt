@@ -1,0 +1,92 @@
+การใส่ Custom Instructions ใน GitHub Copilot จะช่วยให้ AI เข้าใจ "มาตรฐาน" ของคุณโดยไม่ต้องพิมพ์บอกซ้ำทุกครั้ง ใน VS Code 
+คุณสามารถเข้าไปตั้งค่าได้ที่: Settings > Search: "github.copilot.chat.codeGeneration.instructions"
+
+นี่คือร่าง Custom Instructions ที่ออกแบบมาเพื่อนักพัฒนา Java โดยเฉพาะ ซึ่งเน้นความเป๊ะ ตรรกะแน่น และทันสมัยครับ:
+
+
+วิธีนำไปปรับใช้ (Tailoring)
+คุณสามารถแก้ไขบางส่วนให้ตรงกับงานของคุณมากขึ้นได้ เช่น:
+
+ถ้าคุณไม่ชอบ Lombok: ให้ลบข้อ 3 ส่วนที่เกี่ยวกับ Lombok ออก แล้วเปลี่ยนเป็น "Always generate explicit getters, setters, and constructors."
+
+ถ้าเน้น Performance: เพิ่มข้อความว่า "Prioritize memory efficiency and use appropriate Collections 
+(e.g., ArrayList vs LinkedList) based on use cases."
+
+ถ้าชอบสไตล์ Functional: เพิ่มว่า "Prefer Stream API and Functional Programming style for collection processing."
+
+สำหรับการเขียน Automated Test ด้วย Cucumber + Playwright (Java) สิ่งที่สำคัญที่สุดคือการเชื่อมโยงระหว่าง Gherkin (.feature) ไปยัง Step
+Definitions และส่งต่อไปยัง Page Objects (Java Class) ครับ
+
+นี่คือชุด Custom Instructions / Prompt ที่คุณสามารถนำไปวางใน GitHub Copilot เพื่อให้มันช่วยสร้างโค้ดที่มีโครงสร้างดี (Maintainable) และเป็นระเบียบครับ
+###########
+1. Custom Instruction สำหรับตั้งค่าใน Copilot
+(แนะนำให้ใส่ใน Settings ของ Copilot เพื่อให้มันจำ "สไตล์" การเขียน Framework ของคุณ)
+  (Expert-QA-Automation-Engineer.md)
+  
+  
+  2. Prompt Template (ใช้ตอนคุยใน Chat)
+เมื่อคุณมี Test Plan คร่าวๆ ให้ใช้ Prompt นี้เพื่อให้ AI เขียนโค้ดให้ครบทั้งสองส่วนครับ:
+
+Prompt: > "From this test scenario, generate:
+
+A Page Object Class using Playwright Java (encapsulate locators and actions).
+
+A Step Definition Class that calls methods from the Page Object.
+
+Scenario: [วาง Scenario ของคุณที่นี่ เช่น: scenario 1: open browser with url "https://example.com" login with user 
+"admin", password "1234" verify dashboard header is visible] "
+
+###########
+ใน IntelliJ IDEA การตั้งค่า Custom Instructions สำหรับ GitHub Copilot จะแตกต่างจาก VS Code เล็กน้อยครับ 
+โดยคุณสามารถทำได้ผ่านเมนู Settings ตามขั้นตอนดังนี้:
+
+ขั้นตอนการตั้งค่า (IntelliJ IDEA)
+เปิด Settings (กด Ctrl + Alt + S บน Windows/Linux หรือ Cmd + , บน macOS)
+
+ไปที่หัวข้อ Languages & Frameworks
+
+เลือก GitHub Copilot
+
+เลือกแถบ Chat (หรือบางเวอร์ชันจะอยู่ในหัวข้อ Custom Instructions)
+
+คุณจะพบช่องให้กรอก "Custom instructions for chat" หรือ "Standard Instructions"
+
+วางเนื้อหา Prompt ที่ผมออกแบบให้ลงไปในช่องนั้น แล้วกด OK
+
+ข้อควรรู้เพิ่มเติมสำหรับ IntelliJ
+Version: ตรวจสอบให้แน่ใจว่าปลั๊กอิน GitHub Copilot ของคุณเป็นเวอร์ชันล่าสุด (ถ้าหาเมนูไม่เจอ ให้ไปที่หน้า Plugins เพื่ออัปเดตก่อน)
+
+Project-Specific: ปัจจุบัน IntelliJ เริ่มรองรับการใส่ไฟล์ .github/copilot-instructions.md 
+ไว้ ที่ Root ของโปรเจกต์ หากคุณวางไฟล์นี้ไว้ในโปรเจกต์ Copilot จะอ่านคำสั่งจากไฟล์นี้โดยอัตโนมัติ (เหมาะสำหรับทำงานเป็นทีมเพื่อให้ทุกคนใช้มาตรฐานเดียวกัน)
+
+
+วิธีเรียกใช้งานหลังจากตั้งค่า
+หลังจากวาง Instructions แล้ว เมื่อคุณเปิด Copilot Chat (ไอคอนรูปแชทด้านขวามือ) คุณไม่จำเป็นต้องสั่งมันซ้ำเรื่อง Java หรือ Cucumber 
+แล้วครับ คุณสามารถพิมพ์ Scenario ลงไปได้เลย เช่น:
+
+"Generate code for: scenario login to banking system with invalid credentials"
+
+Copilot จะรู้ทันทีว่า:
+
+ต้องเขียนด้วย Java
+
+ต้องใช้ Playwright
+
+ต้องทำโครงสร้างแบบ Page Object Model ตามที่คุณสั่งไว้ใน Instructions
+
+
+ลองเช็คดูครับ
+ถ้าคุณเข้าไปที่หน้า Settings แล้วไม่พบช่องให้กรอก เป็นไปได้ว่าคุณอาจจะใช้เวอร์ชันที่ต้องใส่ผ่านไฟล์ .github/copilot-instructions.md แทน
+
+คุณต้องการให้ผมสรุปเนื้อหาที่จะต้องใส่ในไฟล์ copilot-instructions.md ให้เป็นแบบพร้อม Copy เลยไหมครับ?
+######
+วิธีใช้งาน:
+สร้างโฟลเดอร์ชื่อ .github (ถ้ายังไม่มี) ที่โฟลเดอร์บนสุดของโปรเจกต์
+
+สร้างไฟล์ชื่อ copilot-instructions.md ข้างในโฟลเดอร์นั้น
+
+Copy เนื้อหาด้านบนไปวาง
+
+เมื่อคุณเปิดไฟล์นี้ไว้ในโปรเจกต์: เวลาคุณถาม Copilot ใน Chat หรือให้มันช่วยเขียนโค้ด มันจะอ่านไฟล์นี้และรู้ทันทีว่า "ต้องใช้ Playwright Java" และ "ต้องเขียนแบบ POM" โดยที่คุณไม่ต้องพิมพ์บอกซ้ำครับ!
+
+มีส่วนไหนของโครงสร้างโปรเจกต์ (เช่น ชื่อ Package เฉพาะ) ที่อยากให้ระบุเพิ่มลงไปในไฟล์นี้ไหมครับ?
